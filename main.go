@@ -29,8 +29,8 @@ func main() {
 				fmt.Println(b)
 			}
 			wg.Done()
-			time.Sleep(150 * time.Millisecond)
 		}(id, wg, m)
+		time.Sleep(150 * time.Millisecond)
 	}
 	wg.Wait()
 }
