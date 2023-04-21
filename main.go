@@ -11,15 +11,19 @@ func main() {
 	
 	wg.Add(2)
 
-	go func (ch <- chan int, wg *sync.WaitGroup)  {
+	go func (ch chan int, wg *sync.WaitGroup)  {
 		fmt.Println(<-ch)
-		// Not possible: Compilation error
-		// ch <- 27
+		close(ch)
+		// Recevies zero value for channel type as channel is closed.
+		fmt.Println(<-ch)
 		wg.Done()
 	}(ch, wg)
 
-	go func (ch chan <- int, wg *sync.WaitGroup)  {
+	go func (ch chan int, wg *sync.WaitGroup)  {
 		ch <- 42
+		close(ch)
+		// Panics: sending over closed channel
+		ch <- 27
 		wg.Done()
 	}(ch, wg)
 	wg.Wait()
